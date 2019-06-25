@@ -1,0 +1,14 @@
+services:
+  - name: iam
+    url: http://localhost:3000
+    # credentials:
+    #   bearer:
+    #     token: "bGFza2RqZmxha3NkamZsa2Fqc2Rsa2ZqYWtsc2RqZmtramRmYWxkc2tm"
+
+bundle:
+  name: bundle.tar.gz
+  prefix: static
+  service: iam
+  polling:
+    min_delay_seconds: 10
+    max_delay_seconds: 20
