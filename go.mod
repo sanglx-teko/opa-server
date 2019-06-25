@@ -1,4 +1,4 @@
-module helloworld
+module opatutorial
 
 go 1.12
 

@@ -1,27 +1,20 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"flag"
+	"fmt"
+	"opatutorial/utils"
 )
 
 func main() {
-	e := echo.New()
+	flag.Parse() // get the arguments from command line
 
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	destinationfile := flag.Arg(0)
+	sourcedir := flag.Arg(1)
 
-	// Routes
-	e.GET("/", hello)
-
-	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
-}
-
-// Handler
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	if err := utils.Compress_tarball(destinationfile, sourcedir); err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Success")
 }
