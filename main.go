@@ -1,11 +1,13 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 
 	"opatutorial/models"
 	"opatutorial/models/dao"
+	"opatutorial/utils/tarball"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -13,10 +15,10 @@ import (
 )
 
 func main() {
-	// if err := models.ConnectDatabase(); err != nil {
-	// 	fmt.Println(err)
-	// 	panic(err)
-	// }
+	if err := models.ConnectDatabase(); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 
 	// if err := models.MigrateDB(); err != nil {
 	// 	fmt.Println(err)
@@ -38,21 +40,21 @@ func main() {
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func test_gzip() {
-	// flag.Parse() // get the arguments from command line
+func testGzip() {
+	flag.Parse() // get the arguments from command line
 
-	// destinationfile := flag.Arg(0)
-	// sourcedir := flag.Arg(1)
+	destinationfile := flag.Arg(0)
+	sourcedir := flag.Arg(1)
 
-	// if err := tarball.Compress_tarball(destinationfile, sourcedir); err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
-	// fmt.Println("Success")
+	if err := tarball.Compress_tarball(destinationfile, sourcedir); err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Success")
 }
 
 func hello(c echo.Context) error {
-	return c.JSON(http.StatusOK, &models.User{
+	return c.JSON(http.StatusOK, models.User{
 		ID:   1,
 		Name: "Sang LX",
 	})
