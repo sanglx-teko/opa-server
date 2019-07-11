@@ -1,8 +1,30 @@
 package models
 
 import (
+	"database/sql"
+	"database/sql/driver"
 	"time"
 )
+
+// NullTime ...
+type NullTime struct {
+	Time  time.Time
+	Valid bool // Valid is true if Time is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (nt *NullTime) Scan(value interface{}) error {
+	nt.Time, nt.Valid = value.(time.Time)
+	return nil
+}
+
+// Value implements the driver Valuer interface.
+func (nt NullTime) Value() (driver.Value, error) {
+	if !nt.Valid {
+		return nil, nil
+	}
+	return nt.Time, nil
+}
 
 type (
 	// User ...
@@ -17,6 +39,30 @@ type (
 		CreatedAt   time.Time `db:"created_at" json:"createdAt"`
 		UpdatedAt   time.Time `db:"updated_at" json:"updatedAt"`
 	}
+
+	// Role ...
+	Role struct {
+		ID        int       `db:"id"`
+		Name      string    `db:"name"`
+		CreatedAt time.Time `db:"created_at"`
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+
+	// RolePermission ...
+	RolePermission struct {
+		RoleName string `db:"role_name"`
+		Action   string `db:"action_name"`
+		Resource string `db:"resource_name"`
+	}
+	// UserRole ...
+	UserRole struct {
+		ID        string    `db:"id"`
+		UserID    string    `db:"user_id"`
+		UserName  string    `db:"user_name"`
+		RoleName  string    `db:"role_name"`
+		CreatedAt time.Time `db:"created_at"`
+		UpdatedAt time.Time `db:"updated_at"`
+	}
 	// Action ...
 	Action struct {
 		ID          int
@@ -27,20 +73,32 @@ type (
 	}
 	// Service ...
 	Service struct {
-		ID              int
+		ID              int         `db:"id"`
 		ServiceInfo     string      `db:"service_info"`
 		ServiceGroupID  int         `db:"service_group_id"`
 		ServiceMetaData interface{} `db:"service_metadata"`
-		CreatedAt       time.Time
-		UpdatedAt       time.Time
+		CreatedAt       time.Time   `db:"created_at" json:"createdAt"`
+		UpdatedAt       time.Time   `db:"updated_at" json:"updatedAt"`
 	}
+
+	// ServiceModel ...
+	ServiceModel struct {
+		ID               int            `db:"id"`
+		ServiceID        sql.NullInt64  `db:"service_id"`
+		ServiceGroupName string         `db:"service_group_name"`
+		Name             sql.NullString `db:"name"`
+		URI              sql.NullString `db:"uri"`
+		CreatedAt        NullTime       `db:"created_at" json:"createdAt"`
+		UpdatedAt        NullTime       `db:"updated_at" json:"updatedAt"`
+	}
+
 	// ServiceGroup ...
 	ServiceGroup struct {
-		ID        int
-		Name      string
-		URI       string `db:"uri"`
-		CreatedAt time.Time
-		UpdatedAt time.Time
+		ID        int       `db:"id"`
+		Name      string    `db:"name"`
+		URI       string    `db:"uri"`
+		CreatedAt time.Time `db:"created_at" json:"createdAt"`
+		UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
 	}
 	// Resource ...
 	Resource struct {

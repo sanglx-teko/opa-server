@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
 
 	"opatutorial/utils/tarball"
 
@@ -27,18 +28,31 @@ func initWebServer() {
 
 	// Routes
 	e.GET("/", hello)
-
+	e.GET("/bundle", bundleTest)
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
+func bundleTest(c echo.Context) (erro error) {
+	userRoles, err := dao.UserDAO.GetAllUserWithRoles()
+	if err != nil {
+		erro = echo.ErrInternalServerError
+		return
+	}
+	return c.JSON(http.StatusOK, userRoles)
+}
+
 func main() {
+
 	if err := manager.Instance.ConnectDB("mysql", "root:123@tcp(localhost:3306)/opadb?parseTime=true&charset=utf8"); err != nil {
 		panic(err)
 	}
-
-	dao.InitCFManager(manager.Instance)
+	if err := os.MkdirAll("static", 0700); err != nil {
+		panic(err)
+	}
 	bundler.InitCFManager(manager.Instance)
+	dao.InitCFManager(manager.Instance)
+	bundler.CreateBundleFile()
 
 	initWebServer()
 }
@@ -57,10 +71,10 @@ func testGzip() {
 }
 
 func hello(c echo.Context) (erro error) {
-	users, err := dao.UserDAO.GetAllUser()
+	services, err := dao.ServiceDAO.GetAllServiceWithServiceGroupNameAndURL()
 	if err != nil {
 		erro = echo.ErrInternalServerError
 		return
 	}
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, services)
 }
