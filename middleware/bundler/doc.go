@@ -1,4 +1,4 @@
-package models
+package bundler
 
 import "opatutorial/middleware/configurationmanager/model"
 

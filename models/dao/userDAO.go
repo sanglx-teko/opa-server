@@ -1,14 +1,29 @@
 package dao
 
+import (
+	"opatutorial/models"
+)
+
+const (
+	qUserSelectAll = "SELECT * FROM users"
+)
+
+// IUser ...
 type IUser interface {
-	GetUserFromID() int
+	GetAllUser() ([]*models.User, error)
 }
 
 type userDAO struct {
 }
 
-func (u userDAO) GetUserFromID() int {
-	return 1
+func (u *userDAO) GetAllUser() ([]*models.User, error) {
+	users := []*models.User{}
+	db := ConfigurationManager.GetDB()
+	if err := db.Select(&users, qUserSelectAll); err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
+// UserDAO ...
 var UserDAO IUser = &userDAO{}

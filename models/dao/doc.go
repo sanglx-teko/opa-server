@@ -1,6 +1,7 @@
-package models
+package dao
 
 import "opatutorial/middleware/configurationmanager/model"
+
 
 // ConfigurationManager ...
 var ConfigurationManager model.IConfigurationManager

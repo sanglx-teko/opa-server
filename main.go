@@ -5,39 +5,42 @@ import (
 	"fmt"
 	"net/http"
 
-	"opatutorial/models"
-	"opatutorial/models/dao"
 	"opatutorial/utils/tarball"
+
+	"opatutorial/middleware/bundler"
+	manager "opatutorial/middleware/configurationmanager"
+
+	"opatutorial/models/dao"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func main() {
-	if err := models.ConnectDatabase(); err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-
-	// if err := models.MigrateDB(); err != nil {
-	// 	fmt.Println(err)
-	// 	panic(err)
-	// }
-
-	fmt.Println(dao.UserDAO.GetUserFromID())
-
+func initWebServer() {
 	e := echo.New()
 
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.RemoveTrailingSlash())
 
 	// Routes
 	e.GET("/", hello)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+func main() {
+	if err := manager.Instance.ConnectDB("mysql", "root:123@tcp(localhost:3306)/opadb?parseTime=true&charset=utf8"); err != nil {
+		panic(err)
+	}
+
+	dao.InitCFManager(manager.Instance)
+	bundler.InitCFManager(manager.Instance)
+
+	initWebServer()
 }
 
 func testGzip() {
@@ -53,9 +56,11 @@ func testGzip() {
 	fmt.Println("Success")
 }
 
-func hello(c echo.Context) error {
-	return c.JSON(http.StatusOK, models.User{
-		ID:   1,
-		Name: "Sang LX",
-	})
+func hello(c echo.Context) (erro error) {
+	users, err := dao.UserDAO.GetAllUser()
+	if err != nil {
+		erro = echo.ErrInternalServerError
+		return
+	}
+	return c.JSON(http.StatusOK, users)
 }
