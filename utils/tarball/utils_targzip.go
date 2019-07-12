@@ -10,7 +10,34 @@ import (
 	"strings"
 )
 
-func Compress_tarball(destinationfile string, sourcedir string) (err error) {
+// CopyFile ...
+func CopyFile(src, dst string) (int64, error) {
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return 0, err
+	}
+	defer destination.Close()
+	nBytes, err := io.Copy(destination, source)
+	return nBytes, err
+}
+
+// CompressTarball ...
+func CompressTarball(destinationfile string, sourcedir string) (err error) {
 	if destinationfile == "" {
 		err = fmt.Errorf("Usage : gotar destinationfile.tar.gz source")
 		return
@@ -21,17 +48,30 @@ func Compress_tarball(destinationfile string, sourcedir string) (err error) {
 	}
 
 	dir, err := os.Open(sourcedir)
+	type tempFileInfoStruct struct {
+		Path     string
+		FileInfo os.FileInfo
+	}
+	files := []*tempFileInfoStruct{}
 	defer dir.Close()
-
-	if err != nil {
-		return
+	if err = filepath.Walk(sourcedir, func(path string, info os.FileInfo, err error) error {
+		files = append(files, &tempFileInfoStruct{
+			Path:     path,
+			FileInfo: info,
+		})
+		return nil
+	}); err != nil {
+		fmt.Println("could not walk into directory")
 	}
 
-	files, err := dir.Readdir(0) // grab the files list
+	// if err != nil {
+	// 	return
+	// }
 
-	if err != nil {
-		return
-	}
+	// files, err := dir.Readdir(0) // grab the files list
+	// if err != nil {
+	// 	return
+	// }
 
 	tarfile, err := os.Create(destinationfile)
 	defer tarfile.Close()
@@ -50,20 +90,26 @@ func Compress_tarball(destinationfile string, sourcedir string) (err error) {
 	tarfileWriter := tar.NewWriter(fileWriter)
 	defer tarfileWriter.Close()
 
-	for _, fileInfo := range files {
-
+	for _, f := range files {
+		// fmt.Println("file info:", fileInfo)
+		fileInfo := f.FileInfo
 		if fileInfo.IsDir() {
 			continue
 		}
-		file, err := os.Open(dir.Name() + string(filepath.Separator) + fileInfo.Name())
+		// fmt.Println("file info name:", fileInfo)
+		// fmt.Println("file name:", fileI + string(filepath.Separator) + fileInfo.Name())
+		file, err := os.Open(f.Path)
 		defer file.Close()
 
 		if err != nil {
 			break
 		}
+		// fmt.Println("file Name:", file.Name())
 
 		header := new(tar.Header)
-		header.Name = file.Name()
+		name := file.Name()
+		fileName := strings.Join(strings.Split(name, "/")[2:], "/")
+		header.Name = fileName
 		header.Size = fileInfo.Size()
 		header.Mode = int64(fileInfo.Mode())
 		header.ModTime = fileInfo.ModTime()

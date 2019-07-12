@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"opatutorial/models/dao"
+	"opatutorial/utils/tarball"
 	"os"
 	"strings"
 )
@@ -120,16 +121,24 @@ func CreateBundleFile() (err error) {
 	}
 
 	for serviceGroup, service := range mServices {
-		if err = os.MkdirAll(fmt.Sprintf("static/%s", serviceGroup), 0700); err != nil {
+		if err = os.MkdirAll(fmt.Sprintf("static/%s/rbac/authz", serviceGroup), 0700); err != nil {
 			fmt.Println("could not create service group directory")
 			return err
 		}
+
+		// Copy file .rego and use gzip tarball file
+		regoFilePath := fmt.Sprintf("static/%s/rbac/authz/rbac.rego", serviceGroup)
+		nBytes, err := tarball.CopyFile("rbac.rego", regoFilePath)
+		if err != nil {
+			fmt.Println("could not create rbac.rego file")
+			return err
+		}
+		fmt.Println(nBytes, " bytes copied!")
 		for _, serviceInfo := range service {
 			if !serviceInfo.Name.Valid || !serviceInfo.ServiceID.Valid || !serviceInfo.URI.Valid {
 				continue
 			}
 			serviceName := strings.ToLower(serviceInfo.Name.String)
-			fmt.Println("serviceName:", serviceName)
 			userRoleDirectory := fmt.Sprintf(userRoleDirectoryFormat, serviceGroup, serviceName)
 			rolePermissionDirectory := fmt.Sprintf(rolePermissionDirectoryFormat, serviceGroup, serviceName)
 
@@ -156,6 +165,11 @@ func CreateBundleFile() (err error) {
 				fmt.Println("Could not create role/permission/data.json file")
 				return err
 			}
+		}
+		// Compress gzip file
+		if err = tarball.CompressTarball("static/"+serviceGroup+".tar.gz", "static/"+serviceGroup); err != nil {
+			fmt.Println("Could not create bundle file")
+			return err
 		}
 	}
 

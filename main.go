@@ -6,12 +6,11 @@ import (
 	"net/http"
 	"os"
 
+	"opatutorial/middleware/bundler"
 	"opatutorial/utils/tarball"
 
-	"opatutorial/middleware/bundler"
-	manager "opatutorial/middleware/configurationmanager"
-
 	"opatutorial/models/dao"
+	manager "opatutorial/middleware/configurationmanager"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -43,7 +42,7 @@ func bundleTest(c echo.Context) (erro error) {
 }
 
 func main() {
-
+	// testGzip()
 	if err := manager.Instance.ConnectDB("mysql", "root:123@tcp(localhost:3306)/opadb?parseTime=true&charset=utf8"); err != nil {
 		panic(err)
 	}
@@ -63,7 +62,7 @@ func testGzip() {
 	destinationfile := flag.Arg(0)
 	sourcedir := flag.Arg(1)
 
-	if err := tarball.Compress_tarball(destinationfile, sourcedir); err != nil {
+	if err := tarball.CompressTarball(destinationfile, sourcedir); err != nil {
 		fmt.Println(err)
 		return
 	}

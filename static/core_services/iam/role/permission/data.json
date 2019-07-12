@@ -1,4 +1,1 @@
-{
-  "developer": [{ "action": "write", "object": "permissions" }],
-  "user": [{ "action": "read", "object": "users" }]
-}
+{"developer":[{"action":"write","object":"permissions"}],"user":[{"action":"read","object":"users"}]}
