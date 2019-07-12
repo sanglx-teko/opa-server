@@ -128,12 +128,11 @@ func CreateBundleFile() (err error) {
 
 		// Copy file .rego and use gzip tarball file
 		regoFilePath := fmt.Sprintf("static/%s/rbac/authz/rbac.rego", serviceGroup)
-		nBytes, err := tarball.CopyFile("rbac.rego", regoFilePath)
+		_, err := tarball.CopyFile("rbac.rego", regoFilePath)
 		if err != nil {
 			fmt.Println("could not create rbac.rego file")
 			return err
 		}
-		fmt.Println(nBytes, " bytes copied!")
 		for _, serviceInfo := range service {
 			if !serviceInfo.Name.Valid || !serviceInfo.ServiceID.Valid || !serviceInfo.URI.Valid {
 				continue

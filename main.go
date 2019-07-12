@@ -9,8 +9,8 @@ import (
 	"opatutorial/middleware/bundler"
 	"opatutorial/utils/tarball"
 
-	"opatutorial/models/dao"
 	manager "opatutorial/middleware/configurationmanager"
+	"opatutorial/models/dao"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -26,6 +26,7 @@ func initWebServer() {
 	e.Use(middleware.RemoveTrailingSlash())
 
 	// Routes
+	e.Static("/static", "static")
 	e.GET("/", hello)
 	e.GET("/bundle", bundleTest)
 	// Start server
