@@ -1,0 +1,4 @@
+{
+  "developer": [{ "action": "write", "object": "permissions" }],
+  "user": [{ "action": "read", "object": "users" }]
+}

@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	userRoleDirectoryFormat       = "static/%s/user/role"
-	rolePermissionDirectoryFormat = "static/%s/role/permission"
+	userRoleDirectoryFormat       = "static/%s/%s/user/role"
+	rolePermissionDirectoryFormat = "static/%s/%s/role/permission"
 )
 
 func createUserRoleDataFile(path string, serviceID int64) error {
@@ -119,24 +119,44 @@ func CreateBundleFile() (err error) {
 		}
 	}
 
-	for k, service := range mServices {
-
-		serviceName := strings.ToLower(service.Name.String)
-		userRoleDirectory := fmt.Sprintf(userRoleDirectoryFormat, serviceName)
-		rolePermissionDirectory := fmt.Sprintf(rolePermissionDirectoryFormat, serviceName)
-		// create user role directory
-		if err = os.MkdirAll(userRoleDirectory, 0700); err != nil {
-			fmt.Println("could not create user/role directory")
+	for serviceGroup, service := range mServices {
+		if err = os.MkdirAll(fmt.Sprintf("static/%s", serviceGroup), 0700); err != nil {
+			fmt.Println("could not create service group directory")
 			return err
 		}
-		// create role permission directory
-		if err = os.MkdirAll(rolePermissionDirectory, 0700); err != nil {
-			fmt.Println("could not create role/permission directory")
-			return err
-		}
+		for _, serviceInfo := range service {
+			if !serviceInfo.Name.Valid || !serviceInfo.ServiceID.Valid || !serviceInfo.URI.Valid {
+				continue
+			}
+			serviceName := strings.ToLower(serviceInfo.Name.String)
+			fmt.Println("serviceName:", serviceName)
+			userRoleDirectory := fmt.Sprintf(userRoleDirectoryFormat, serviceGroup, serviceName)
+			rolePermissionDirectory := fmt.Sprintf(rolePermissionDirectoryFormat, serviceGroup, serviceName)
 
-		createUserRoleDataFile(userRoleDirectory, service.ServiceID.Int64)
-		createRolePermissionDataFile(rolePermissionDirectory, service.ServiceID.Int64)
+			// create user role directory ...
+			if err = os.MkdirAll(userRoleDirectory, 0700); err != nil {
+				fmt.Println("could not create user/role directory")
+				return err
+			}
+
+			// create user/role/data.json file
+			if err = createUserRoleDataFile(userRoleDirectory, serviceInfo.ServiceID.Int64); err != nil {
+				fmt.Println("could not create user/role/data.json file")
+				return err
+			}
+
+			// // create role permission directory ...
+			if err = os.MkdirAll(rolePermissionDirectory, 0700); err != nil {
+				fmt.Println("Could not create role/permission directory")
+				return err
+			}
+
+			// create role/permission/data.json file
+			if err = createRolePermissionDataFile(rolePermissionDirectory, serviceInfo.ServiceID.Int64); err != nil {
+				fmt.Println("Could not create role/permission/data.json file")
+				return err
+			}
+		}
 	}
 
 	return nil
