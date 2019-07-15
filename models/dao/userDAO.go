@@ -1,18 +1,21 @@
 package dao
 
 import (
+	"fmt"
 	"opatutorial/models"
 )
 
-const (
-	qUserSelectAll          = "SELECT * FROM users"
-	qUserSelectAllWithRoles = `SELECT user_roles.id, users.id as user_id, users.name as user_name, roles.name as role_name, user_roles.created_at, user_roles.updated_at 
-		FROM user_roles
-	INNER JOIN users
-	ON users.id = user_roles.user_id
-	INNER JOIN roles
-	ON roles.id = user_roles.role_id
-	ORDER BY users.id`
+var (
+	qUserSelectAll          = "SELECT * FROM opa_users" + models.TableOPAUser
+	qUserSelectAllWithRoles = fmt.Sprintf(`SELECT %s.id, %s.id as user_id, %s.name as user_name, %s.name as role_name, %s.created_at, %s.updated_at 
+		FROM %s
+	INNER JOIN %s
+	ON %s.id = %s.user_id
+	INNER JOIN %s
+	ON %s.id = %s.role_id
+	ORDER BY %s.id`, models.TableOPARUserRole, models.TableOPAUser, models.TableOPAUser, models.TableOPARole,
+		models.TableOPARUserRole, models.TableOPARUserRole, models.TableOPARUserRole, models.TableOPAUser, models.TableOPAUser, models.TableOPARUserRole,
+		models.TableOPARole, models.TableOPARole, models.TableOPARUserRole, models.TableOPAUser)
 )
 
 // IUser ...

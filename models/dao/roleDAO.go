@@ -5,35 +5,40 @@ import (
 	"opatutorial/models"
 )
 
-const (
-	qRoleSelectAllWithPermissions = `
-	select actions.name as action_name, resources.name as resource_name, roles.name as role_name 
-	from role_permissions
-	inner join roles
-	on roles.id = role_permissions.role_id
-	inner join permissions
-	on permissions.id = role_permissions.permission_id
-	inner join actions
-	on actions.id = permissions.action_id
-	inner join resources
-	on resources.id = permissions.resource_id
-	order by roles.name`
-	qRoleSelectAll                      = "select * from roles"
-	qRoleGetRolePermissionWithServiceID = `
+var (
+	qRoleSelectAllWithPermissions = fmt.Sprintf(`
+	select %s.name as action_name, %s.name as resource_name, %s.name as role_name 
+	from %s
+	inner join %s
+	on %s.id = %s.role_id
+	inner join %s
+	on %s.id = %s.permission_id
+	inner join %s
+	on %s.id = %s.action_id
+	inner join %s
+	on %s.id = %s.resource_id
+	order by %s.name`, models.TableOPAActions, models.TableOPAResource, models.TableOPARole, models.TableOPARolePermissions,
+		models.TableOPARole, models.TableOPARole, models.TableOPARolePermissions, models.TableOPAPermission, models.TableOPAPermission,
+		models.TableOPARolePermissions, models.TableOPAActions, models.TableOPAActions, models.TableOPAPermission, models.TableOPAResource,
+		models.TableOPAResource, models.TableOPAPermission, models.TableOPARole)
+	qRoleSelectAll                      = "select * from " + models.TableOPARole
+	qRoleGetRolePermissionWithServiceID = fmt.Sprintf(`
 	SELECT
-		actions.name AS action_name,
-		resources.name AS resource_name,
-		roles.name AS role_name
+		%s.name AS action_name,
+		%s.name AS resource_name,
+		%s.name AS role_name
 	FROM
-		role_permissions
-	INNER JOIN roles ON roles.id = role_permissions.role_id
-	INNER JOIN permissions ON permissions.id = role_permissions.permission_id
-	INNER JOIN actions ON actions.id = permissions.action_id
-	INNER JOIN resources ON resources.id = permissions.resource_id
+		%s
+	INNER JOIN %s ON %s.id = %s.role_id
+	INNER JOIN %s ON %s.id = %s.permission_id
+	INNER JOIN %s ON %s.id = %s.action_id
+	INNER JOIN %s ON %s.id = %s.resource_id
 	WHERE
-		resources.service_id = ?
+		%s.service_id = ?
 	ORDER BY
-		roles.name`
+		%s.name`, models.TableOPAActions, models.TableOPAResource, models.TableOPARole, models.TableOPARolePermissions, models.TableOPARole, models.TableOPARole,
+		models.TableOPARolePermissions, models.TableOPAPermission, models.TableOPAPermission, models.TableOPARolePermissions, models.TableOPAActions, models.TableOPAActions, models.TableOPAPermission,
+		models.TableOPAResource, models.TableOPAResource, models.TableOPAPermission, models.TableOPAResource, models.TableOPARole)
 )
 
 // IRole ...
@@ -59,6 +64,7 @@ func (u *roleDAO) GetAllRoles() ([]*models.Role, error) {
 func (u *roleDAO) GetAllRolesWithPermission() ([]*models.RolePermission, error) {
 	db := ConfigurationManager.GetDB()
 	rolePermissions := []*models.RolePermission{}
+	fmt.Println("qRoleSelectAllWithPermissions", qRoleSelectAllWithPermissions)
 	if err := db.Select(&rolePermissions, qRoleSelectAllWithPermissions); err != nil {
 		return nil, err
 	}
@@ -66,9 +72,9 @@ func (u *roleDAO) GetAllRolesWithPermission() ([]*models.RolePermission, error) 
 }
 
 func (u *roleDAO) GetAllRolePermissionWithServiceID(serviceID int64) ([]*models.RolePermission, error) {
-	fmt.Println("service id:", serviceID)
 	db := ConfigurationManager.GetDB()
 	rolePermissions := []*models.RolePermission{}
+	// fmt.Println("qRoleGetRolePermissionWithServiceID", qRoleGetRolePermissionWithServiceID)
 	if err := db.Select(&rolePermissions, qRoleGetRolePermissionWithServiceID, serviceID); err != nil {
 		return nil, err
 	}

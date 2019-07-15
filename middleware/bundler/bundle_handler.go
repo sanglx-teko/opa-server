@@ -22,10 +22,10 @@ func createUserRoleDataFile(path string, serviceID int64) error {
 	}
 	m := make(map[string][]string)
 	for _, userRole := range userRoles {
-		if _, ok := m[userRole.UserName]; !ok {
-			m[userRole.UserName] = []string{userRole.RoleName}
+		if _, ok := m[userRole.UserID]; !ok {
+			m[userRole.UserID] = []string{userRole.RoleName}
 		} else {
-			m[userRole.UserName] = append(m[userRole.UserName], userRole.RoleName)
+			m[userRole.UserID] = append(m[userRole.UserID], userRole.RoleName)
 		}
 	}
 	if len(m) > 0 {
