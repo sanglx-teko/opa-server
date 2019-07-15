@@ -1,13 +1,10 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"net/http"
 	"os"
 
 	"opatutorial/middleware/bundler"
-	"opatutorial/utils/tarball"
 
 	manager "opatutorial/middleware/configurationmanager"
 	"opatutorial/models/dao"
@@ -27,10 +24,10 @@ func initWebServer() {
 
 	// Routes
 	e.Static("/static", "static")
-	e.GET("/", hello)
-	e.GET("/bundle", bundleTest)
+	// e.GET("/", hello)
+	// e.GET("/bundle", bundleTest)
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":3000"))
 }
 
 func bundleTest(c echo.Context) (erro error) {
@@ -57,18 +54,18 @@ func main() {
 	initWebServer()
 }
 
-func testGzip() {
-	flag.Parse() // get the arguments from command line
+// func testGzip() {
+// 	flag.Parse() // get the arguments from command line
 
-	destinationfile := flag.Arg(0)
-	sourcedir := flag.Arg(1)
+// 	destinationfile := flag.Arg(0)
+// 	sourcedir := flag.Arg(1)
 
-	if err := tarball.CompressTarball(destinationfile, sourcedir); err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("Success")
-}
+// 	if err := tarball.CompressTarball(destinationfile, sourcedir); err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 	fmt.Println("Success")
+// }
 
 func hello(c echo.Context) (erro error) {
 	services, err := dao.ServiceDAO.GetAllServiceWithServiceGroupNameAndURL()
