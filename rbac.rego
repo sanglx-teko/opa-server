@@ -14,7 +14,7 @@ package rbac.authz
 # role-permissions assignments
 # role_permissions = data.bundle.role.permission
 # logic that implements RBAC.
-bundle_name = sprintf("bundle_%v", [input.service])
+bundle_name = sprintf("%v", [input.service])
 
 default allow = false
 allow {
