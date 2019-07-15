@@ -1,14 +1,14 @@
 services:
-  - name: iam
+  - name: online_sales
     url: http://localhost:3000
     # credentials:
     #   bearer:
     #     token: "bGFza2RqZmxha3NkamZsa2Fqc2Rsa2ZqYWtsc2RqZmtramRmYWxkc2tm"
 
 bundle:
-  name: core_services.tar.gz
+  name: online_sales.tar.gz
   prefix: static
-  service: iam
+  service: online_services
   polling:
     min_delay_seconds: 5
     max_delay_seconds: 10

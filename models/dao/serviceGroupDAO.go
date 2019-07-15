@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	qServiceGroupSelectAll = "SELECT * FROM service_groups"
+	qServiceGroupSelectAll = "SELECT * FROM opa_service_groups"
 )
 
 // IServiceGroup ...

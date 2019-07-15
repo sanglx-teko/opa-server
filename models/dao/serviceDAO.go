@@ -5,22 +5,23 @@ import (
 	"opatutorial/models"
 )
 
-const (
-	qServiceSelectAll                           = "SELECT * FROM services"
-	qServiceSelectAllWithServiceGroupNameAndURL = `
+var (
+	qServiceSelectAll                           = "SELECT * FROM " + models.TableOPAService
+	qServiceSelectAllWithServiceGroupNameAndURL = fmt.Sprintf(`
 	SELECT
-	service_groups.id,
-	services.id as service_id,
-	service_groups.name AS service_group_name,
-	service_groups.uri,
-	services.name,
-	services.created_at,
-	services.updated_at
+	%s.id,
+	%s.id as service_id,
+	%s.name AS service_group_name,
+	%s.uri,
+	%s.name,
+	%s.created_at,
+	%s.updated_at
 FROM
-	service_groups
-	LEFT JOIN services ON service_groups.id = services.service_group_id
+	%s
+	LEFT JOIN %s ON %s.id = %s.service_group_id
 ORDER BY
-	service_groups.id`
+	%s.id`, models.TableOPAServiceGroup, models.TableOPAService, models.TableOPAServiceGroup, models.TableOPAServiceGroup, models.TableOPAService, models.TableOPAService, models.TableOPAService, models.TableOPAServiceGroup, models.TableOPAService,
+		models.TableOPAServiceGroup, models.TableOPAService, models.TableOPAServiceGroup)
 )
 
 // IService ...

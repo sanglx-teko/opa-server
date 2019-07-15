@@ -6,6 +6,27 @@ import (
 	"time"
 )
 
+const (
+	// TableOPAUser ...
+	TableOPAUser = "opa_users"
+	// TableOPAActions ...
+	TableOPAActions = "opa_actions"
+	// TableOPARole ...
+	TableOPARole = "opa_roles"
+	// TableOPAPermission ...
+	TableOPAPermission = "opa_permissions"
+	// TableOPAService         = "opa_services"
+	TableOPAService = "opa_services"
+	// TableOPAServiceGroup    = "opa_service_groups"
+	TableOPAServiceGroup = "opa_service_groups"
+	// TableOPAResource        = "opa_resources"
+	TableOPAResource = "opa_resources"
+	// TableOPARolePermissions = "opa_role_permissions"
+	TableOPARolePermissions = "opa_role_permissions"
+	// TableOPARUserRole       = "opa_user_roles"
+	TableOPARUserRole = "opa_user_roles"
+)
+
 // NullTime ...
 type NullTime struct {
 	Time  time.Time
