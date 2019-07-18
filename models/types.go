@@ -95,6 +95,7 @@ type (
 	// Service ...
 	Service struct {
 		ID              int         `db:"id"`
+		Name            string      `db:"name"`
 		ServiceInfo     string      `db:"service_info"`
 		ServiceGroupID  int         `db:"service_group_id"`
 		ServiceMetaData interface{} `db:"service_metadata"`

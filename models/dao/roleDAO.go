@@ -55,7 +55,6 @@ func (u *roleDAO) GetAllRoles() ([]*models.Role, error) {
 	db := ConfigurationManager.GetDB()
 	roles := []*models.Role{}
 	if err := db.Select(&roles, qRoleSelectAll); err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	return roles, nil
@@ -64,7 +63,6 @@ func (u *roleDAO) GetAllRoles() ([]*models.Role, error) {
 func (u *roleDAO) GetAllRolesWithPermission() ([]*models.RolePermission, error) {
 	db := ConfigurationManager.GetDB()
 	rolePermissions := []*models.RolePermission{}
-	fmt.Println("qRoleSelectAllWithPermissions", qRoleSelectAllWithPermissions)
 	if err := db.Select(&rolePermissions, qRoleSelectAllWithPermissions); err != nil {
 		return nil, err
 	}
