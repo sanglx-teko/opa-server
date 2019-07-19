@@ -12,7 +12,7 @@ import (
 	"opatutorial/models/dao"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -27,9 +27,6 @@ func initWebServer() {
 
 	// Routes
 	e.Static("/static", "static")
-	// e.GET("/", hello)
-	// e.GET("/bundle", bundleTest)
-	// Start server
 	e.Logger.Fatal(e.Start(os.Getenv("PORT")))
 }
 
@@ -44,11 +41,6 @@ func bundleTest(c echo.Context) (erro error) {
 
 func main() {
 	// testGzip()
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error in loading .env file")
-		panic(err)
-	}
-
 	if err := manager.Instance.ConnectDB(os.Getenv("SQL_DIALECT"), os.Getenv("SQL_DSN")); err != nil {
 		panic(err)
 	}
@@ -67,19 +59,6 @@ func main() {
 
 	initWebServer()
 }
-
-// func testGzip() {
-// 	flag.Parse() // get the arguments from command line
-
-// 	destinationfile := flag.Arg(0)
-// 	sourcedir := flag.Arg(1)
-
-// 	if err := tarball.CompressTarball(destinationfile, sourcedir); err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-// 	fmt.Println("Success")
-// }
 
 func hello(c echo.Context) (erro error) {
 	services, err := dao.ServiceDAO.GetAllServiceWithServiceGroupNameAndURL()
