@@ -1,4 +1,4 @@
-module opatutorial
+module github.com/sanglx-teko/opa-server
 
 go 1.12
 

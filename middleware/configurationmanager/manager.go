@@ -2,7 +2,7 @@ package configurationmanager
 
 import (
 	"fmt"
-	"opatutorial/middleware/configurationmanager/model"
+	"github.com/sanglx-teko/opa-server/middleware/configurationmanager/model"
 
 	"github.com/jmoiron/sqlx"
 )

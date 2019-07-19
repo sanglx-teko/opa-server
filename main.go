@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	"opatutorial/middleware/bundler"
+	"github.com/sanglx-teko/opa-server/middleware/bundler"
 
-	manager "opatutorial/middleware/configurationmanager"
-	"opatutorial/models/dao"
+	manager "github.com/sanglx-teko/opa-server/middleware/configurationmanager"
+	"github.com/sanglx-teko/opa-server/models/dao"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/joho/godotenv/autoload"

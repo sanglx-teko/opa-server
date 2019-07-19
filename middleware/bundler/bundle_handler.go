@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"opatutorial/models/dao"
-	"opatutorial/utils/tarball"
+	"github.com/sanglx-teko/opa-server/models/dao"
+	"github.com/sanglx-teko/opa-server/utils/tarball"
 	"os"
 	"strings"
 )

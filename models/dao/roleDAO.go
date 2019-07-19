@@ -2,7 +2,7 @@ package dao
 
 import (
 	"fmt"
-	"opatutorial/models"
+	"github.com/sanglx-teko/opa-server/models"
 )
 
 var (

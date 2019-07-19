@@ -1,6 +1,6 @@
 package bundler
 
-import "opatutorial/middleware/configurationmanager/model"
+import "github.com/sanglx-teko/opa-server/middleware/configurationmanager/model"
 
 // ConfigurationManager ...
 var ConfigurationManager model.IConfigurationManager

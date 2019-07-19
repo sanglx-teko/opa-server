@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"opatutorial/models"
+	"github.com/sanglx-teko/opa-server/models"
 )
 
 const (
