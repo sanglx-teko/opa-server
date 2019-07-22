@@ -2,29 +2,25 @@ package test
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"testing"
 
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/sanglx-teko/opa-server/middleware/bundler"
 	manager "github.com/sanglx-teko/opa-server/middleware/configurationmanager"
 	"github.com/sanglx-teko/opa-server/models/dao"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
 // Create DB Connection
 func Initialize() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error in loading .env file")
-		panic(err)
-	}
 	if err := manager.Instance.ConnectDB(os.Getenv("SQL_DIALECT"), os.Getenv("SQL_DSN")); err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
+
 	if err := os.MkdirAll("static", 0700); err != nil {
 		panic(err)
 	}
@@ -42,10 +38,8 @@ func TestMain(m *testing.M) {
 // Test godotenv.Load()
 func TestLoadEnv(t *testing.T) {
 	assert := assert.New(t)
-	err := godotenv.Load()
-	assert.Nil(err, "Must loaded end file")
 	assert.Equal("mysql", os.Getenv("SQL_DIALECT"))
-	assert.Equal("root:0918273645@tcp(localhost:3306)/opadb?parseTime=true&charset=utf8", os.Getenv("SQL_DSN"))
+	assert.Equal("root:123@tcp(localhost:3306)/opadb?parseTime=true&charset=utf8", os.Getenv("SQL_DSN"))
 	assert.Equal(":3000", os.Getenv("PORT"))
 }
 
