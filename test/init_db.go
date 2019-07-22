@@ -3,13 +3,23 @@ package test
 import (
 	"fmt"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/sanglx-teko/opa-server/models"
-	"github.com/sanglx-teko/opa-server/models/dao"
 )
+
+var db *sqlx.DB
+
+func setDB(_db *sqlx.DB) {
+	db = _db
+}
+
+func getDB() (result *sqlx.DB) {
+	result = db
+	return
+}
 
 // InitRoleTable ...
 func InitRoleTable() {
-	db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPARole)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -37,7 +47,7 @@ func InitRoleTable() {
 
 // InitUserRoleTable ...
 func InitUserRoleTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPARUserRole)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE IF NOT EXISTS `%s`("+
@@ -59,7 +69,7 @@ func InitUserRoleTable() {
 
 // InitActionTable ...
 func InitActionTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAActions)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -81,7 +91,7 @@ func InitActionTable() {
 
 // InitPermissionTable ...
 func InitPermissionTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAPermission)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -104,7 +114,7 @@ func InitPermissionTable() {
 
 // InitResourceTable ...
 func InitResourceTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAResource)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -129,7 +139,7 @@ func InitResourceTable() {
 
 // InitRolePermissionTable ...
 func InitRolePermissionTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPARolePermissions)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -151,7 +161,7 @@ func InitRolePermissionTable() {
 
 // InitServiceGroupTable ...
 func InitServiceGroupTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAServiceGroup)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -174,7 +184,7 @@ func InitServiceGroupTable() {
 
 // InitServiceTable ...
 func InitServiceTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAService)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -199,7 +209,7 @@ func InitServiceTable() {
 
 // InitUserTable ...
 func InitUserTable() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", models.TableOPAUser)
 	db.Exec(qDropTable)
 	qCreateTable := fmt.Sprintf("CREATE TABLE `%s` ("+
@@ -240,7 +250,7 @@ func InitFullDB() {
 
 // DropAllDB ...
 func DropAllDB() {
-	db := dao.ConfigurationManager.GetDB()
+	// db := dao.ConfigurationManager.GetDB()
 	qDropTable := "DROP TABLE IF EXISTS `%s`"
 	db.Exec(fmt.Sprintf(qDropTable, models.TableOPARole))
 	db.Exec(fmt.Sprintf(qDropTable, models.TableOPARUserRole))

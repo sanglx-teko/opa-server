@@ -31,6 +31,7 @@ func Initialize() {
 // Create DB Connection before testing
 func TestMain(m *testing.M) {
 	Initialize()
+	setDB(dao.ConfigurationManager.GetDB())
 	code := m.Run()
 	os.Exit(code)
 }
