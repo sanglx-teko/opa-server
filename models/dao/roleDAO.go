@@ -2,6 +2,7 @@ package dao
 
 import (
 	"fmt"
+
 	"github.com/sanglx-teko/opa-server/models"
 )
 

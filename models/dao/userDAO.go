@@ -2,11 +2,12 @@ package dao
 
 import (
 	"fmt"
+
 	"github.com/sanglx-teko/opa-server/models"
 )
 
 var (
-	qUserSelectAll          = "SELECT * FROM opa_users" + models.TableOPAUser
+	qUserSelectAll          = "SELECT * FROM " + models.TableOPAUser
 	qUserSelectAllWithRoles = fmt.Sprintf(`SELECT %s.id, %s.id as user_id, %s.name as user_name, %s.name as role_name, %s.created_at, %s.updated_at 
 		FROM %s
 	INNER JOIN %s
